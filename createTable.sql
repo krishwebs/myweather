@@ -1,8 +1,10 @@
 CREATE TABLE IF NOT EXISTS `temperatures` (
-  `id` int(255) NOT NULL AUTO_INCREMENT,
-  `temperature` double NOT NULL,
-  `humidity` varchar(20) NOT NULL,
-  `dateMeasured` date NOT NULL,
-  `hourMeasured` int(128) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`temperature-1` DOUBLE NOT NULL ,
+`temperature-2` DOUBLE NOT NULL ,
+`temperature-3` DOUBLE NOT NULL ,
+`temperature-4` DOUBLE NOT NULL ,
+`pressure` VARCHAR( 22 ) NOT NULL ,
+`pressure-sea` VARCHAR( 22 ) NOT NULL ,
+`altitude` VARCHAR( 22 ) NOT NULL
+) ENGINE = MYISAM ;
