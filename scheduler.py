@@ -12,11 +12,11 @@ databaseUsername="root"
 databasePassword="krish123"
 databaseName="krish_py" #do not change unless you named the Wordpress database with some other name
 
-def saveToDatabase(temperature,humidity):
+def saveToDatabase(temp1, temp2, temp3, temp4, humidity, pressure, sea_pressure, altitude):
 
     con=mdb.connect("localhost", databaseUsername, databasePassword, databaseName)
     currentDate=datetime.datetime.now().date()
-
+    print currentDate
     now=datetime.datetime.now()
     midnight=datetime.datetime.combine(now.date(),datetime.time())
     minutes=((now-midnight).seconds)/60 #minutes after midnight, use datead$
@@ -24,8 +24,9 @@ def saveToDatabase(temperature,humidity):
 
     with con:
             cur=con.cursor()
-
-            cur.execute("INSERT INTO temperatures (temperature,humidity, dateMeasured, hourMeasured) VALUES (%s,%s,%s,%s)",(temperature,humidity,currentDate, minutes))
+            query = ("INSERT INTO `temperatures2`(`temperature-1`, `temperature-2`, `temperature-3`, `temperature-4`, `humidity`, `dateMeasured`, `hourMeasured`, `pressure`, `pressure-sea`, `altitude`)"
+                        "VALUES (%s,%s,%s,%s,%s,'%s',%s,%s,%s,%s)"% (temp1, temp2, temp3, temp4, humidity, currentDate, minutes, pressure, sea_pressure, altitude))
+            cur.execute(query)
 
     print "Saved temperature"
     return "true"
@@ -38,29 +39,31 @@ def readInfo():
     # Run the DHT program to get the humidity and temperature readings!
 
         source = "/home/praveen/project/joach-myweather/myweather/weather.py"
+
         # search for tempretures , continue to search untill it do not found 
-        temp1_matches = search_attr('Temp1', source)
-        temp2_matches = search_attr('Temp2', source)
-        temp3_matches = search_attr('Temp3', source)
-        temp4_matches = search_attr('Temp4', source)
+        temp1 = search_attr('Temp1', source)
+        temp2 = search_attr('Temp2', source)
+        temp3 = search_attr('Temp3', source)
+        temp4 = search_attr('Temp4', source)
 
-        # search for humidity printout
-        # matches = re.search("Press =\s+([0-9.]+)", output)
+        # search for Humidity
+        humidity = search_attr('humidity', source)
+        # search for Pressure 
+        pressure = search_attr('Press', source)
+        # search for Sea pressure
+        sea_pressure = search_attr('sea_pressure', source)
+        # search for Altitude
+        altitude = search_attr('altitude', source)
 
-        # if (not matches):
-        #     time.sleep(3)
-        #     continue
-        # humidity = float(matches.group(1))
-        #humidity=str(humidity)+"%"
-
-        humidity = search_attr('Press', source)
-        print "Temperature: %.1f C" % temp1_matches
-        print "Temperature: %.1f C" % temp2_matches
-        print "Temperature: %.1f C" % temp3_matches
-        print "Temperature: %.1f C" % temp4_matches
-        print "Pressure:    %s %%" % humidity
-        return "true"
-        #return saveToDatabase(temp,humidity)
+        print "Temperature-1: %.1f C" % temp1
+        print "Temperature-2: %.1f C" % temp2
+        print "Temperature-3: %.1f C" % temp3
+        print "Temperature-4: %.1f C" % temp4
+        print "Humidity:    %s %%" % humidity
+        print "Pressure:    %s %%" % pressure
+        print "Pressure-Sea: %s %%" % sea_pressure
+        print "Altitude:    %s ft" % altitude
+        return saveToDatabase(temp1, temp2, temp3, temp4, humidity, pressure, sea_pressure, altitude)
 
 
 def search_attr(val, source):
